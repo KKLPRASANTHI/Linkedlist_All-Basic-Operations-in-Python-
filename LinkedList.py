@@ -19,29 +19,15 @@ class LinkedList:
         if ll.head==None:
             ll.head=nnode
         else:
+            '''
             temp=self.head
             self.head=nnode
             nnode.next=temp
+            '''
+            nnode.next=self.head
+            self.head=nnode
         if dt!=10:
             print("Insertion at start successful")
-    def printList(self):
-        if self.head==None:
-            print("List is empty")
-            return
-        temp=self.head
-        while temp:
-            if temp.next!=None:
-                print(temp.data,"->",end=" ")
-            else:
-                print(temp.data)
-            temp=temp.next
-    def printReverse(self):
-        temp=self.head
-        rp=[]
-        while temp:
-            rp.insert(0,temp.data)
-            temp=temp.next
-        print(*rp,sep="-->")
     def insertAtEnd(self,val):
         print('Enter the node',end=' ')
         x=int(input())
@@ -75,30 +61,24 @@ class LinkedList:
             while cnt<pos-1:
                 temp=temp.next
                 cnt+=1
+            '''
             temp1=temp.next
             temp.next=nnode
             nnode.next=temp1
+            '''
+            nnode.next=temp.next
+            temp.next=nnode
         print("Insertion at",pos,"successful")
     def deleteAtStart(self,dat):
         if self.head==None:
             print("List is empty")
             return
         else:
-            lend=ll.lenOfLL()
-            if lend==1:
-                self.head=None
-            else:
-                '''
-                temp=self.head
-                tempd=temp.next
-                self.head=tempd
-                '''
-                temp=self.head
-                self.head=temp.next
-                temp=None#To delete Node from memory instead of just unlinking it from linked list
+            temp=self.head
+            self.head=temp.next
+            temp=None#To delete Node from memory instead of just unlinking it from linked list
         if dat!=9:
             print("Deletion at start successful")
-        
     def deleteAtEnd(self,tad):
         temp=self.head
         if temp==None:
@@ -124,34 +104,32 @@ class LinkedList:
         else:
             print("Enter the position",end=' ')
             dpos=int(input())
-            lend=ll.lenOfLL()
-            if dpos>lend:
+            if dpos<1:
                 print("No such position available")
-                return
+            elif dpos==1:
+                ll.deleteAtStart(9)
             else:
-                if lend==1 and dpos==1:
-                    print("Before:",self.head)
-                    self.head=None
-                    #temp=None Here even if you set temp is equal to None self.head will not be set to 1 just becuase temp =self.head .so inorder to deelete a node at position 1 in a linked list of length 1 , we need to set self.head to 1 , But not **temp=self.head and temp=None**.This(temp=self.head and temp=None) will not work
-                    #print("After:",self.head)If you set only temp to None instead of self.head to none, then this pprint statement will print some address instead of None. Because you set temporary variable temp to None. But the actual vale in self.head will not get changed. Because of this even after temp=None, self.head will not become None
-                    #print("temp",temp)
-                elif dpos==lend:
-                    ll.deleteAtEnd(9)
-                elif dpos==1:
-                    ll.deleteAtStart(9)
+                temp=self.head
+                flag=False
+                if temp.next is None and dpos!=1:#Here actually there is no need to verify dpos!=1 or not Becuase if it is 1 it will not come here, because the control has already entered the dpos==1 if block
+                    flag=True
                 else:
-                    temp=self.head
                     c=1
                     while(c<dpos-1):
                         c+=1
                         temp=temp.next
-                    #tempd=temp.next.next
-                    #temp.next=tempd
+                        if temp is None or temp.next is None:
+                            flag=True
+                            break
+                if flag:
+                    print("No such position available")
+                    return
+                else:
                     tempd=temp.next#print("Before tempd",tempd)
                     temp.next=tempd.next#print("Before Deletion",tempd)
                     tempd=None#print("After Deletion",tempd)
                     #temp.next=temp.next.next
-                print("Deletion at",dpos,"successful")
+            print("Deletion at",dpos,"successful")
     def deleteKey(self):
         print("Enter the key value which you want to delete",end=" ")
         key=int(input())
@@ -193,7 +171,6 @@ class LinkedList:
                 print("Key not found")
                 return
             print(key,"deleted")
-        
     def reverseLL(self):
             prev=None
             curr=self.head
@@ -214,17 +191,13 @@ class LinkedList:
             #temp.next=curr
             curr.next.next=curr
             curr.next=None
-    def recurPrint(self,temp):
-            #if temp.next==None:This condition is written seperately to not print a arrow mark to last node
-                #print(temp.data)
-            if temp.next==None:
-                print(temp.data)
-                return
-            else:
-                print(temp.data,end="-->")
-                #temp=temp.next
-                #ll.recurPrint(temp)The below line directly calls recurPrint function with temp.next instead of updating temp to temp.next and then calling recurPrint function with temp, what i did id i directly called recurPrint with updated value of temp just to reduce 1 line of code :-)
-                ll.recurPrint(temp.next)
+    def printReverse(self):
+        temp=self.head
+        rp=[]
+        while temp:
+            rp.insert(0,temp.data)
+            temp=temp.next
+        print(*rp,sep="-->")
     
     def recurReversePrint(self,temp):
         if temp==None:
@@ -237,7 +210,36 @@ class LinkedList:
             print(temp.data,end="-->")
                     #temp=temp.next
                     #ll.recurPrint(temp)The below line directly calls recurPrint function with temp.next instead of updating temp to temp.next and then calling recurPrint function with temp, what i did id i directly called recurPrint with updated value of temp just to reduce 1 line of code :-)                   
-    
+    def recurPrint(self,temp):
+            #if temp.next==None:This condition is written seperately to not print a arrow mark to last node
+                #print(temp.data)
+            if temp.next==None:
+                print(temp.data)
+                return
+            else:
+                print(temp.data,end="-->")
+                #temp=temp.next
+                #ll.recurPrint(temp)The below line directly calls recurPrint function with temp.next instead of updating temp to temp.next and then calling recurPrint function with temp, what i did id i directly called recurPrint with updated value of temp just to reduce 1 line of code :-)
+                ll.recurPrint(temp.next)
+    def Display(self):
+        temp=self.head
+        while temp.next!=None:
+            print(temp.data,end="-->")
+            temp=temp.next
+        print(temp.data)
+    '''
+    def printList(self):
+        if self.head==None:
+            print("List is empty")
+            return
+        temp=self.head
+        while temp:
+            if temp.next!=None:
+                print(temp.data,"->",end=" ")
+            else:
+                print(temp.data)
+            temp=temp.next
+    '''
 ll=LinkedList()
 print("===============LINKED LIST MENU===============")
 print("1.Inserton at start")
@@ -248,11 +250,12 @@ print("5.Deletion at end")
 print("6.Delete at position")
 print("7.Delete a key")
 print("8.Length of linked list")
-print("9.Reverse the Linked List")
-print("10.Print using Recursion")
-print("11.Reverse print using recursion(Note: The actual linked List remains same, its only printed in reverse order)")
-print("12.Print in Reverse(Without using recursion)")
-print("13.Display")
+print("9.Reverse the Linked List without using Recursion")
+print("10.Reverse the linked list using recursion")
+print("11.Print in Reverse(Without using recursion)")
+print("12.Reverse print using recursion(Note: The actual linked List remains same, its only printed in reverse order)")
+print("13. Print the Linked List Using recursion")
+print("14.Display(Prints the Linked List using Iteration)")
 print("0.Exit")
 while True:
     print("Enter your choice",end=" ")
@@ -282,28 +285,31 @@ while True:
         else:
             ll.reverseLL()
     elif ch==10:
-        if ll.head==None:
-            print("Nothing to print :-)")
-        else:
-            ll.recurPrint(ll.head)
-    elif ch==11:
-        if ll.head==None:
-            print("Nothing to print :-)")
-        else:
-            ll.recurReversePrint(ll.head)
-    elif ch==12:
-        if ll.head==None:
-            print("Nothing to print :-)")
-        else:
-            ll.printReverse()
-    elif ch==13:
-        ll.printList()
-    elif ch==13:
         lrec=ll.lenOfLL()
         if lrec==0:
             print("List is Empty")
         else:
             ll.recurReverse(ll.head)
+    elif ch==11:
+        if ll.head==None:
+            print("Nothing to print :-)")
+        else:
+            ll.printReverse()
+    elif ch==12:
+        if ll.head==None:
+            print("Nothing to print :-)")
+        else:
+            ll.recurReversePrint(ll.head)
+    elif ch==13:
+        if ll.head==None:
+            print("Nothing to print :-)")
+        else:
+            ll.recurPrint(ll.head)       
+    elif ch==14:
+        if ll.head==None:
+            print("Nothing to print :-)")
+        else:
+              ll.Display()
     else:
         print("Invalid choice Try again!!!")
         
